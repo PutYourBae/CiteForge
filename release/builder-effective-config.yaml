@@ -1,0 +1,44 @@
+directories:
+  output: release
+  buildResources: assets
+appId: com.citeforge.app
+productName: CiteForge
+copyright: © 2025 CiteForge
+forceCodeSigning: false
+files:
+  - filter:
+      - dist/**/*
+      - dist-electron/**/*
+      - database/schema.sql
+      - '!**/*.ts'
+      - '!**/node_modules/*/{CHANGELOG.md,README.md,test,tests}'
+      - '!**/node_modules/.bin'
+win:
+  icon: assets/icon.ico
+  sign: null
+  signingHashAlgorithms: []
+  target:
+    - target: portable
+      arch:
+        - x64
+  artifactName: CiteForge-${version}-win-portable.exe
+mac:
+  icon: assets/icon.icns
+  target:
+    - target: dmg
+      arch:
+        - x64
+        - arm64
+  category: public.app-category.productivity
+  artifactName: CiteForge-${version}-mac.dmg
+linux:
+  icon: assets/icon.png
+  target:
+    - target: AppImage
+      arch:
+        - x64
+  artifactName: CiteForge-${version}-linux.AppImage
+publish:
+  provider: github
+  releaseType: release
+electronVersion: 28.3.3
