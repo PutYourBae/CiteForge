@@ -17,6 +17,7 @@ interface DownloadStore {
   markDone: (id: number, filePath: string) => void
   markFailed: (id: number, error: string) => void
   remove: (id: number) => void
+  removeDownload: (id: number) => void
 }
 
 export const useDownloadStore = create<DownloadStore>((set) => ({
@@ -38,4 +39,5 @@ export const useDownloadStore = create<DownloadStore>((set) => ({
     ),
   })),
   remove: (id) => set((s) => ({ downloads: s.downloads.filter(d => d.id !== id) })),
+  removeDownload: (id) => set((s) => ({ downloads: s.downloads.filter(d => d.id !== id) })),
 }))

@@ -20,7 +20,15 @@ contextBridge.exposeInMainWorld('electronAPI', {
   updatePaperNotes: (id: string, notes: string) =>
     ipcRenderer.invoke('db:updatePaperNotes', id, notes),
 
-  // ── AI Insights Cache ────────────────────────────────────────────
+  // ── AI Intelligence Engine ────────────────────────────────────────
+  aiEnrich: (paper: unknown) =>
+    ipcRenderer.invoke('ai:enrich', paper),
+  aiCite: (paper: unknown, format: string) =>
+    ipcRenderer.invoke('ai:cite', paper, format),
+  aiCiteAll: (paper: unknown) =>
+    ipcRenderer.invoke('ai:citeAll', paper),
+
+  // ── AI Insights Cache (DB) ────────────────────────────────────────
   getAIInsight: (paperId: string) =>
     ipcRenderer.invoke('db:getAIInsight', paperId),
   saveAIInsight: (paperId: string, insight: unknown) =>

@@ -3,16 +3,21 @@ import { SemanticScholarAdapter } from '../../src/core/discovery/adapters/semant
 import { OpenAlexAdapter } from '../../src/core/discovery/adapters/openalex.adapter'
 import { ArxivAdapter } from '../../src/core/discovery/adapters/arxiv.adapter'
 import { CrossRefAdapter } from '../../src/core/discovery/adapters/crossref.adapter'
+import { PubMedAdapter } from '../../src/core/discovery/adapters/pubmed.adapter'
+import { CoreAdapter } from '../../src/core/discovery/adapters/core.adapter'
 import { Deduplicator } from '../../src/core/discovery/deduplicator'
 import { RelevanceRanker } from '../../src/core/discovery/ranker'
 import { QueryProcessor } from '../../src/core/discovery/query-processor'
 import { SearchQuery } from '../../src/types/search.types'
+import { getDb } from '../../database/db'
 
 const adapters = [
   new SemanticScholarAdapter(),
   new OpenAlexAdapter(),
   new ArxivAdapter(),
   new CrossRefAdapter(),
+  new PubMedAdapter(),
+  new CoreAdapter(),
 ]
 const deduplicator = new Deduplicator()
 const ranker = new RelevanceRanker()

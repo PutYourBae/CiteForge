@@ -5,6 +5,8 @@ import { registerSearchHandlers } from './ipc/search.ipc'
 import { registerDownloadHandlers } from './ipc/download.ipc'
 import { registerDatabaseHandlers } from './ipc/database.ipc'
 import { registerSystemHandlers } from './ipc/system.ipc'
+import { registerAIHandlers } from './ipc/ai.ipc'
+import { buildMenu } from './menu'
 
 const isDev = process.env.NODE_ENV === 'development'
 let mainWindow: BrowserWindow | null = null
@@ -16,7 +18,7 @@ function createWindow() {
     minWidth: 1024,
     minHeight: 700,
     backgroundColor: '#0F1117',
-    icon: path.join(__dirname, '../assets/icon.png'),
+    icon: path.join(__dirname, '../assets/icon.ico'),
     titleBarStyle: process.platform === 'darwin' ? 'hiddenInset' : 'default',
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
@@ -40,6 +42,7 @@ function createWindow() {
   })
 
   mainWindow.on('closed', () => { mainWindow = null })
+  buildMenu(mainWindow)
 }
 
 app.whenReady().then(async () => {
@@ -53,6 +56,7 @@ app.whenReady().then(async () => {
   registerDownloadHandlers()
   registerDatabaseHandlers()
   registerSystemHandlers()
+  registerAIHandlers()
 
   createWindow()
 
