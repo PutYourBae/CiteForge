@@ -1,0 +1,45 @@
+appId: com.citeforge.app
+productName: CiteForge
+copyright: "© 2025 CiteForge"
+
+directories:
+  output: release
+  buildResources: assets
+
+files:
+  - dist/**/*
+  - dist-electron/**/*
+  - database/schema.sql
+  - "!**/*.ts"
+  - "!**/node_modules/*/{CHANGELOG.md,README.md,test,tests}"
+  - "!**/node_modules/.bin"
+
+# ── Windows ──────────────────────────────────────────────
+win:
+  icon: assets/icon.ico
+  target:
+    - target: portable
+      arch: [x64]
+  artifactName: "CiteForge-${version}-win-portable.exe"
+
+# ── macOS ────────────────────────────────────────────────
+mac:
+  icon: assets/icon.icns
+  target:
+    - target: dmg
+      arch: [x64, arm64]
+  category: public.app-category.productivity
+  artifactName: "CiteForge-${version}-mac.dmg"
+
+# ── Linux ─────────────────────────────────────────────────
+linux:
+  icon: assets/icon.png
+  target:
+    - target: AppImage
+      arch: [x64]
+  artifactName: "CiteForge-${version}-linux.AppImage"
+
+# Electron auto-updater config (optional for future use)
+publish:
+  provider: github
+  releaseType: release
