@@ -19,11 +19,13 @@ const LEGEND = [
 ]
 
 export function ResearchGraphPage() {
-  const { selectedPaper, setSelectedPaper } = usePapersStore()
-  const { navigate, selectPaper } = useUIStore()
+  const { selectedPapers, setSelectedPaper } = usePapersStore()
+  const { navigate, selectPaper, currentPage } = useUIStore()
   const [graph, setGraph] = useState<GraphData | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  const selectedPaper = selectedPapers[currentPage]
 
   useEffect(() => {
     if (!selectedPaper) return
@@ -50,7 +52,7 @@ export function ResearchGraphPage() {
       const node = graph.nodes.find(n => n.id === nodeId)
       if (node && !node.isCenter) {
         // Could navigate to that paper — for now just select it
-        selectPaper(nodeId)
+        selectPaper(currentPage, nodeId)
         navigate('results')
       }
     }

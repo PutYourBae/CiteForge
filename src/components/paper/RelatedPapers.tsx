@@ -10,7 +10,7 @@ interface RelatedPapersProps {
 
 export function RelatedPapers({ papers }: RelatedPapersProps) {
   const { setSelectedPaper } = usePapersStore()
-  const { selectPaper, navigate } = useUIStore()
+  const { selectPaper, navigate, currentPage } = useUIStore()
 
   if (!papers.length) return null
 
@@ -24,8 +24,8 @@ export function RelatedPapers({ papers }: RelatedPapersProps) {
           <button
             key={paper.id}
             onClick={() => {
-              setSelectedPaper(paper)
-              selectPaper(paper.id)
+              setSelectedPaper(currentPage, paper)
+              selectPaper(currentPage, paper.id)
               navigate('results')
             }}
             className="w-full text-left p-3 rounded-lg bg-[#21253A] border border-[#2D3149]

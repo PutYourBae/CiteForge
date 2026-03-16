@@ -2,6 +2,8 @@ appId: com.citeforge.app
 productName: CiteForge
 copyright: "© 2025 CiteForge"
 
+forceCodeSigning: false
+
 directories:
   output: release
   buildResources: assets
@@ -10,6 +12,7 @@ files:
   - dist/**/*
   - dist-electron/**/*
   - database/schema.sql
+  - assets/**/*
   - "!**/*.ts"
   - "!**/node_modules/*/{CHANGELOG.md,README.md,test,tests}"
   - "!**/node_modules/.bin"
@@ -17,6 +20,8 @@ files:
 # ── Windows ──────────────────────────────────────────────
 win:
   icon: assets/icon.ico
+  sign: null
+  signingHashAlgorithms: []
   target:
     - target: portable
       arch: [x64]
@@ -24,7 +29,7 @@ win:
 
 # ── macOS ────────────────────────────────────────────────
 mac:
-  icon: assets/icon.icns
+  icon: assets/icon.png
   target:
     - target: dmg
       arch: [x64, arm64]

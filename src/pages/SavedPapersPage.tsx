@@ -1,13 +1,15 @@
 import React, { useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { BookMarked, Trash2, ExternalLink, Tag } from 'lucide-react'
+import { BookMarked, Trash2, ExternalLink, Tag, Download } from 'lucide-react'
 import { usePapersStore } from '../store/papers.store'
 import { useUIStore } from '../store/ui.store'
+import { useDownloadStore } from '../store/download.store'
 import { AccessBadge } from '../components/paper/AccessBadge'
 
 export function SavedPapersPage() {
   const { savedPapers, setSavedPapers, removeSaved, setSelectedPaper } = usePapersStore()
-  const { navigate, selectPaper } = useUIStore()
+  const { navigate, selectPaper, currentPage } = useUIStore()
+  const { addDownload, updateProgress, markDone, markFailed } = useDownloadStore()
 
   useEffect(() => {
     ;(async () => {
@@ -36,15 +38,34 @@ export function SavedPapersPage() {
   }
 
   const handleOpen = (paper: any) => {
-    setSelectedPaper(paper)
-    selectPaper(paper.id)
-    navigate('results')
+    setSelectedPaper(currentPage, paper)
+    selectPaper(currentPage, paper.id)
   }
 
   const handleDelete = async (id: string, e: React.MouseEvent) => {
     e.stopPropagation()
     removeSaved(id)
     await (window as any).electronAPI.deleteSavedPaper(id)
+  }
+
+  const handleDownload = async (paper: any, e: React.MouseEvent) => {
+    e.stopPropagation()
+    const result = await (window as any).electronAPI.downloadPaper(paper)
+    if (result?.cancelled) return
+    addDownload({
+      id: result.downloadId,
+      paperId: paper.id,
+      paperTitle: paper.title,
+      filePath: result.filePath,
+      status: 'downloading',
+      progress: 0,
+    })
+    ;(window as any).electronAPI.onDownloadProgress((data: any) => {
+      if (data.downloadId !== result.downloadId) return
+      if (data.status === 'done') markDone(data.downloadId, data.filePath)
+      else if (data.status === 'failed') markFailed(data.downloadId, data.error)
+      else updateProgress(data.downloadId, data.progress)
+    })
   }
 
   return (
@@ -85,8 +106,18 @@ export function SavedPapersPage() {
               </p>
             </div>
 
-            <div className="flex flex-col gap-1.5 shrink-0 opacity-0 group-hover:opacity-100
+            <div className="flex flex-row items-center gap-1.5 shrink-0 opacity-0 group-hover:opacity-100
                             transition-opacity">
+              {paper.pdfUrl && (
+                <button
+                  onClick={e => handleDownload(paper, e)}
+                  className="p-1.5 rounded-lg text-[#10B981] hover:text-white
+                             hover:bg-[#10B981] transition-colors"
+                  title="Download PDF"
+                >
+                  <Download size={14} />
+                </button>
+              )}
               <button
                 onClick={e => { e.stopPropagation(); (window as any).electronAPI.openExternal(paper.publisherUrl) }}
                 className="p-1.5 rounded-lg text-[#94A3B8] hover:text-white

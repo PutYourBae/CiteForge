@@ -11,12 +11,12 @@ import { CitationGenerator } from '../core/ai/citation/generator'
 const citationGen = new CitationGenerator()
 
 export function PaperDetailPage() {
-  const { selectedPaper, aiInsight, isLoadingAI, setAIInsight, setLoadingAI } = usePapersStore()
-  const { navigate, selectPaper } = useUIStore()
+  const { selectedPapers, aiInsight, isLoadingAI, setAIInsight, setLoadingAI } = usePapersStore()
+  const { navigate, selectPaper, currentPage } = useUIStore()
   const { addDownload, markDone, markFailed, updateProgress } = useDownloadStore()
   const [expanded, setExpanded] = useState(false)
 
-  const paper = selectedPaper
+  const paper = selectedPapers[currentPage]
   if (!paper) return null
 
   const citations = citationGen.generateAll(paper)
@@ -67,11 +67,11 @@ export function PaperDetailPage() {
       <div className="flex-1 overflow-y-auto px-6 py-5 space-y-5">
         {/* Back */}
         <button
-          onClick={() => { selectPaper(null); navigate('results') }}
+          onClick={() => { selectPaper(currentPage, null) }}
           className="flex items-center gap-1.5 text-xs text-[#94A3B8]
                      hover:text-[#4F8EF7] transition-colors mb-1"
         >
-          <ArrowLeft size={13} /> Back to results
+          <ArrowLeft size={13} /> {currentPage === 'saved' ? 'Back to saved' : 'Back to results'}
         </button>
 
         {/* Title & meta */}
@@ -107,7 +107,7 @@ export function PaperDetailPage() {
 
           {/* Action buttons */}
           <div className="flex flex-wrap gap-2 pt-1">
-            {paper.accessStatus === 'open_access' && paper.pdfUrl && (
+            {paper.pdfUrl && (
               <button
                 onClick={handleDownload}
                 className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#10B981]
@@ -178,11 +178,11 @@ export function PaperDetailPage() {
             <p className="text-sm text-[#F1F5F9]/80 leading-relaxed">
               {aiInsight.summaries.short}
             </p>
-            {aiInsight.summaries.keyContributions?.length > 0 && (
+            {(aiInsight.summaries.keyContributions?.length ?? 0) > 0 && (
               <div className="mt-3">
                 <p className="text-[11px] text-[#94A3B8] font-semibold mb-1.5">Key Contributions</p>
                 <ul className="space-y-1">
-                  {aiInsight.summaries.keyContributions.map((c, i) => (
+                  {aiInsight.summaries.keyContributions?.map((c, i) => (
                     <li key={i} className="flex gap-2 text-xs text-[#F1F5F9]/70">
                       <span className="text-[#7C3AED] shrink-0">•</span>{c}
                     </li>

@@ -15,13 +15,13 @@ interface ResultCardProps {
 
 export function ResultCard({ paper, index }: ResultCardProps) {
   const { savedPapers, addSaved, removeSaved, setSelectedPaper } = usePapersStore()
-  const { navigate, selectPaper } = useUIStore()
+  const { navigate, selectPaper, currentPage } = useUIStore()
   const { addDownload, updateProgress, markDone, markFailed } = useDownloadStore()
   const isSaved = savedPapers.some(p => p.id === paper.id)
 
   const handleSelect = () => {
-    setSelectedPaper(paper)
-    selectPaper(paper.id)
+    setSelectedPaper(currentPage, paper)
+    selectPaper(currentPage, paper.id)
     navigate('results')
   }
 
@@ -125,7 +125,7 @@ export function ResultCard({ paper, index }: ResultCardProps) {
       {/* Actions */}
       <div className="flex items-center gap-2 flex-wrap opacity-0 group-hover:opacity-100
                       transition-opacity duration-150" onClick={e => e.stopPropagation()}>
-        {paper.accessStatus === 'open_access' && paper.pdfUrl && (
+        {paper.pdfUrl && (
           <button
             onClick={handleDownload}
             className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg

@@ -6,8 +6,8 @@
   "author": "CiteForge",
   "license": "MIT",
   "scripts": {
-    "dev": "concurrently -k \"vite\" \"wait-on http://localhost:5173 && electron .\"",
-    "build": "tsc --project tsconfig.electron.json && vite build",
+    "dev": "vite",
+    "build": "vite build",
     "electron:build": "npm run build && electron-builder",
     "electron:portable": "npm run build && electron-builder --win portable",
     "rebuild": "electron-rebuild -f -w better-sqlite3",
@@ -20,12 +20,12 @@
     "better-sqlite3": "^9.4.3",
     "d3": "^7.8.5",
     "date-fns": "^3.3.1",
-    "electron": "^28.0.0",
     "framer-motion": "^10.18.0",
     "lucide-react": "^0.341.0",
     "pdfjs-dist": "^4.0.379",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "sonner": "^2.0.7",
     "xml2js": "^0.6.2",
     "zustand": "^4.4.7"
   },
@@ -40,11 +40,15 @@
     "@vitejs/plugin-react": "^4.2.1",
     "autoprefixer": "^10.4.17",
     "concurrently": "^8.2.2",
+    "electron": "28.3.3",
     "electron-builder": "^24.12.0",
     "postcss": "^8.4.35",
+    "rcedit": "^5.0.2",
     "tailwindcss": "^3.4.1",
     "typescript": "^5.3.3",
     "vite": "^5.0.12",
+    "vite-plugin-electron": "^0.29.1",
+    "vite-plugin-electron-renderer": "^0.14.6",
     "wait-on": "^7.2.0"
   }
 }

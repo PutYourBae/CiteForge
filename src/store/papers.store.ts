@@ -4,20 +4,20 @@ import { AIInsight } from '../types/ai.types'
 
 interface PapersStore {
   savedPapers: Paper[]
-  selectedPaper: Paper | null
+  selectedPapers: Record<string, Paper | null>
   aiInsight: AIInsight | null
   isLoadingAI: boolean
   setSavedPapers: (papers: Paper[]) => void
   addSaved: (paper: Paper) => void
   removeSaved: (id: string) => void
-  setSelectedPaper: (paper: Paper | null) => void
+  setSelectedPaper: (page: string, paper: Paper | null) => void
   setAIInsight: (insight: AIInsight | null) => void
   setLoadingAI: (v: boolean) => void
 }
 
 export const usePapersStore = create<PapersStore>((set) => ({
   savedPapers: [],
-  selectedPaper: null,
+  selectedPapers: { home: null, results: null, saved: null, graph: null, settings: null },
   aiInsight: null,
   isLoadingAI: false,
   setSavedPapers: (papers) => set({ savedPapers: papers }),
@@ -29,7 +29,10 @@ export const usePapersStore = create<PapersStore>((set) => ({
   removeSaved: (id) => set((s) => ({
     savedPapers: s.savedPapers.filter(p => p.id !== id),
   })),
-  setSelectedPaper: (paper) => set({ selectedPaper: paper, aiInsight: null }),
+  setSelectedPaper: (page, paper) => set((s) => ({
+    selectedPapers: { ...s.selectedPapers, [page]: paper },
+    aiInsight: null,
+  })),
   setAIInsight: (insight) => set({ aiInsight: insight }),
   setLoadingAI: (v) => set({ isLoadingAI: v }),
 }))

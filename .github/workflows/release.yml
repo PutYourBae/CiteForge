@@ -18,6 +18,8 @@ jobs:
             artifact: "release/*.exe"
           - os: macos-latest
             artifact: "release/*.dmg"
+          - os: macos-13
+            artifact: "release/*.dmg"
           - os: ubuntu-latest
             artifact: "release/*.AppImage"
 

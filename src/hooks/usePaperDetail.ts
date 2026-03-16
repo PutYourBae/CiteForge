@@ -5,11 +5,11 @@ import { Paper } from '../types/paper.types'
 
 export function usePaperDetail() {
   const { setSelectedPaper, setAIInsight, setLoadingAI } = usePapersStore()
-  const { selectPaper, navigate } = useUIStore()
+  const { selectPaper, navigate, currentPage } = useUIStore()
 
   const openPaper = useCallback(async (paper: Paper) => {
-    setSelectedPaper(paper)
-    selectPaper(paper.id)
+    setSelectedPaper(currentPage, paper)
+    selectPaper(currentPage, paper.id)
     navigate('results')
 
     // Load AI insight async
@@ -22,12 +22,12 @@ export function usePaperDetail() {
     } finally {
       setLoadingAI(false)
     }
-  }, [])
+  }, [currentPage])
 
   const closePaper = useCallback(() => {
-    setSelectedPaper(null)
-    selectPaper(null)
-  }, [])
+    setSelectedPaper(currentPage, null)
+    selectPaper(currentPage, null)
+  }, [currentPage])
 
   return { openPaper, closePaper }
 }

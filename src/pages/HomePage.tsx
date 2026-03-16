@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { FlaskConical, ArrowRight, Sparkles } from 'lucide-react'
+import React from 'react'
+import { motion } from 'framer-motion'
+import { FlaskConical, Sparkles, Tags } from 'lucide-react'
 import { SearchBar } from '../components/search/SearchBar'
+import { KeywordBar } from '../components/search/KeywordBar'
 import { useSearchStore } from '../store/search.store'
 import { useUIStore } from '../store/ui.store'
 
@@ -14,24 +15,24 @@ const QUICK_SEARCHES = [
   'BERT language model fine-tuning',
 ]
 
-const SOURCES = [
-  'Semantic Scholar', 'OpenAlex', 'CrossRef', 'arXiv', 'PubMed', 'CORE'
-]
+const SOURCES = ['Semantic Scholar', 'OpenAlex', 'CrossRef', 'arXiv', 'PubMed', 'CORE']
 
 export function HomePage() {
-  const { setQuery, setResults, setError } = useSearchStore()
+  const { setQuery, setResults, setError, keywords } = useSearchStore()
   const { navigate, setSearching } = useUIStore()
 
   const handleSearch = async (text: string) => {
     if (!text.trim()) return
+    // Append keywords to the search query for richer results
+    const fullQuery = keywords ? `${text} ${keywords}` : text
     setQuery(text)
     setSearching(true)
     navigate('results')
 
     try {
       const result = await (window as any).electronAPI.search({
-        text,
-        filters: { sortBy: 'relevance', maxResults: 50 }
+        text: fullQuery,
+        filters: { sortBy: 'relevance', maxResults: 50 },
       })
       setResults(result)
     } catch (err: any) {
@@ -42,7 +43,8 @@ export function HomePage() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center h-full px-8 gap-10">
+    <div className="flex flex-col items-center justify-center h-full px-8 gap-8">
+
       {/* Hero */}
       <motion.div
         initial={{ opacity: 0, y: -24 }}
@@ -57,19 +59,32 @@ export function HomePage() {
           </div>
         </div>
         <h1 className="text-5xl font-bold text-white mb-3 tracking-tight">CiteForge</h1>
-        <p className="text-[#94A3B8] text-lg">
-          AI-powered academic research assistant
-        </p>
+        <p className="text-[#94A3B8] text-lg">AI-powered academic research assistant</p>
       </motion.div>
 
-      {/* Search bar */}
+      {/* Search area */}
       <motion.div
         initial={{ opacity: 0, scale: 0.96 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.35, delay: 0.1 }}
-        className="w-full max-w-2xl"
+        className="w-full max-w-2xl flex flex-col gap-3"
       >
+        {/* Main search bar */}
         <SearchBar onSearch={handleSearch} autoFocus placeholder="Search papers, journals, authors..." />
+
+        {/* ── Keyword bar ─────────────────────────────────────────── */}
+        <KeywordBar className="rounded-xl" />
+
+        {/* Hint */}
+        {keywords && (
+          <motion.p
+            initial={{ opacity: 0, y: -4 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-[11px] text-[#4F8EF7]/60 text-center"
+          >
+            Keywords akan digabungkan dengan query pencarian untuk hasil yang lebih relevan
+          </motion.p>
+        )}
       </motion.div>
 
       {/* Quick searches */}
