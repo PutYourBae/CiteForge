@@ -16,12 +16,16 @@ jobs:
         include:
           - os: windows-latest
             artifact: "release/*.exe"
+            args: "--win --x64"
           - os: macos-latest
             artifact: "release/*.dmg"
+            args: "--mac --arm64"
           - os: macos-13
             artifact: "release/*.dmg"
+            args: "--mac --x64"
           - os: ubuntu-latest
             artifact: "release/*.AppImage"
+            args: "--linux --x64"
 
     runs-on: ${{ matrix.os }}
     steps:
@@ -37,7 +41,7 @@ jobs:
         run: npm ci
 
       - name: Build & Package
-        run: npm run electron:build
+        run: npm run build && npx electron-builder ${{ matrix.args }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
