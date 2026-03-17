@@ -32,7 +32,6 @@ mac:
   icon: assets/icon.png
   target:
     - target: dmg
-      arch: [x64, arm64]
   category: public.app-category.productivity
   artifactName: "CiteForge-${version}-mac-${arch}.dmg"
 

@@ -19,6 +19,34 @@ export function buildMenu(mainWindow: BrowserWindow): void {
       ],
     },
     {
+      label: 'Edit',
+      submenu: [
+        { role: 'undo' as const },
+        { role: 'redo' as const },
+        { type: 'separator' },
+        { role: 'cut' as const },
+        { role: 'copy' as const },
+        { role: 'paste' as const },
+        ...(isMac ? [
+          { role: 'pasteAndMatchStyle' as const },
+          { role: 'delete' as const },
+          { role: 'selectAll' as const },
+          { type: 'separator' },
+          {
+            label: 'Speech',
+            submenu: [
+              { role: 'startSpeaking' as const },
+              { role: 'stopSpeaking' as const }
+            ]
+          }
+        ] : [
+          { role: 'delete' as const },
+          { type: 'separator' },
+          { role: 'selectAll' as const }
+        ])
+      ]
+    },
+    {
       label: 'View',
       submenu: [
         { role: 'reload' as const },
